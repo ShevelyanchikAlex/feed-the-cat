@@ -1,3 +1,4 @@
+import 'package:feed_the_cat_app/view/home_screen/custom_drawer_constants.dart';
 import 'package:feed_the_cat_app/view/progress_screen/progress_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,116 +12,117 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
+    final _user = FirebaseAuth.instance.currentUser!;
 
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Colors.blue, Colors.greenAccent],
-              ),
-            ),
-            accountName: Text(
-              user.displayName!,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            accountEmail: Text(
-              user.email!,
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.white,
-              child: CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(user.photoURL!),
-              ),
-            ),
+          _userAccountsDrawerHeader(
+            userName: _user.displayName,
+            userEmail: _user.email,
+            userPhoto: _user.photoURL,
           ),
           ListTile(
             leading: const Icon(Icons.developer_mode),
             title: const Text(
-              'About Developer',
+              CustomDrawerConstants.aboutDeveloper,
             ),
             onTap: () async {
-              final createdSuggestion = await Navigator.push(
+              await Navigator.push(
                 context,
                 _routePage(const AboutAuthorScreen()),
               );
             },
           ),
-          const Divider(
-            height: 3,
-            color: Colors.black38,
-            indent: 15,
-            endIndent: 15.0,
-          ),
+          _tileDivider(),
           ListTile(
             leading: const Icon(Icons.description),
             title: const Text(
-              'Game Description',
+              CustomDrawerConstants.gameDescription,
             ),
             onTap: () async {
-              final createdSuggestion = await Navigator.push(
+              await Navigator.push(
                 context,
                 _routePage(const GameDescriptionScreen()),
               );
             },
           ),
-          const Divider(
-            height: 3,
-            color: Colors.black38,
-            indent: 15,
-            endIndent: 15.0,
-          ),
+          _tileDivider(),
           ListTile(
             leading: const Icon(Icons.analytics_outlined),
             title: const Text(
-              'Results',
+              CustomDrawerConstants.results,
             ),
             onTap: () async {
-              final createdSuggestion = await Navigator.push(
+              await Navigator.push(
                 context,
                 _routePage(const ResultScreen()),
               );
             },
           ),
-          const Divider(
-            height: 3,
-            color: Colors.black38,
-            indent: 15,
-            endIndent: 15.0,
-          ),
+          _tileDivider(),
           ListTile(
             leading: const Icon(Icons.show_chart),
             title: const Text(
-              'Progress',
+              CustomDrawerConstants.progress,
             ),
             onTap: () async {
-              final createdSuggestion = await Navigator.push(
+              await Navigator.push(
                 context,
                 _routePage(const ProgressScreen()),
               );
             },
           ),
-          const Divider(
-            height: 3,
-            color: Colors.black38,
-            indent: 15,
-            endIndent: 15.0,
-          ),
+          _tileDivider(),
         ],
       ),
+    );
+  }
+
+  UserAccountsDrawerHeader _userAccountsDrawerHeader({
+    @required userName,
+    @required userEmail,
+    @required userPhoto,
+  }) {
+    return UserAccountsDrawerHeader(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Colors.blue, Colors.greenAccent],
+        ),
+      ),
+      accountName: Text(
+        userName!,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+      accountEmail: Text(
+        userEmail!,
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      currentAccountPicture: CircleAvatar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.white,
+        child: CircleAvatar(
+          radius: 30,
+          backgroundImage: NetworkImage(userPhoto!),
+        ),
+      ),
+    );
+  }
+
+  Divider _tileDivider() {
+    return const Divider(
+      height: 4,
+      color: Colors.black38,
+      indent: 20.0,
+      endIndent: 20.0,
     );
   }
 
@@ -134,11 +136,12 @@ class CustomDrawer extends StatelessWidget {
         child,
       ) {
         return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child);
+          position: Tween<Offset>(
+            begin: const Offset(0.0, 1.0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
+        );
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:feed_the_cat_app/view/feed_the_cat_screen/feed_the_cat_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,26 +23,20 @@ class FeedTheCatScreen extends StatefulWidget {
 
 class _FeedTheCatScreenState extends State<FeedTheCatScreen>
     with SingleTickerProviderStateMixin {
-  final String title = 'Feed the Cat';
   final DBHelper _dbHelper = DBHelper.instance;
 
   int _counter = 0;
-  late AnimationController _controller;
   int _currentColorIndex = 0;
+  late AnimationController _controller;
   final user = FirebaseAuth.instance.currentUser!;
-
-  final List _colors = [
-    Colors.red,
-    Colors.green,
-    Colors.black38,
-    Colors.deepPurple,
-  ];
 
   @override
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(
+        milliseconds: FeedTheCatConstants.controllerDuration,
+      ),
     );
     super.initState();
   }
@@ -56,12 +51,12 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: const Text(FeedTheCatConstants.title),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.share),
             onPressed: () {
-              Share.share('Feed my Cat: $_counter');
+              Share.share('${FeedTheCatConstants.shareTitle}$_counter');
             },
           ),
           IconButton(
@@ -73,119 +68,125 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
         ],
       ),
       drawer: const CustomDrawer(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: (_counter % 15 == 0 && _counter != 0)
-                  ? Lottie.asset(
-                      'assets/lotties/hearts.json',
-                      height: 200.0,
-                      controller: _controller,
-                      onLoaded: (LottieComposition composition) {
-                        _controller
-                          ..duration = composition.duration
-                          ..forward();
-                      },
-                    )
-                  : const SizedBox(
-                      height: 150.0,
-                    ),
-              flex: 2,
-            ),
-            Expanded(
-              child: AnimatedBuilder(
-                animation: _controller.view,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: _controller.value * 2 * pi,
-                    child: child,
-                  );
-                },
-                child: const Image(
-                  image: AssetImage('assets/images/cat.png'),
+      body: _body(),
+    );
+  }
+
+  Center _body() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: (_counter % 15 == 0 && _counter != 0)
+                ? Lottie.asset(
+                    FeedTheCatConstants.heartsLottie,
+                    height: 200.0,
+                    controller: _controller,
+                    onLoaded: (LottieComposition composition) {
+                      _controller
+                        ..duration = composition.duration
+                        ..forward();
+                    },
+                  )
+                : const SizedBox(
+                    height: 150.0,
+                  ),
+            flex: 2,
+          ),
+          Expanded(
+            child: AnimatedBuilder(
+              animation: _controller.view,
+              builder: (context, child) {
+                return Transform.rotate(
+                  angle: _controller.value * 2 * pi,
+                  child: child,
+                );
+              },
+              child: const Image(
+                image: AssetImage(
+                  FeedTheCatConstants.catImage,
                 ),
               ),
-              flex: 4,
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    child: Text(
-                      'Satiety: $_counter',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                    padding: const EdgeInsets.all(3.0),
+            flex: 4,
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  child: Text(
+                    '${FeedTheCatConstants.satietyTitle} $_counter',
+                    style: Theme.of(context).textTheme.headline4,
                   ),
-                  Padding(
-                    child: SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.redAccent),
-                        ),
-                        onPressed: _incrementCounter,
-                        child: const Text(
-                          'Feed',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  padding: const EdgeInsets.all(3.0),
+                ),
+                Padding(
+                  child: SizedBox(
+                    width: 100,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.redAccent),
+                      ),
+                      onPressed: _incrementCounter,
+                      child: const Text(
+                        FeedTheCatConstants.feedButtonTitle,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    padding: const EdgeInsets.all(3.0),
                   ),
-                  Padding(
-                    child: SizedBox(
-                      width: 100, // <-- Your width
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.redAccent),
-                        ),
-                        onPressed: () async {
-                          _saveResult(
-                              userName: user.displayName!, score: _counter);
-                          Fluttertoast.showToast(
-                              msg: "Result was saved",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.white,
-                              textColor: Colors.black,
-                              fontSize: 16.0);
-                        },
-                        child: const Text(
-                          'Save',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  padding: const EdgeInsets.all(3.0),
+                ),
+                Padding(
+                  child: SizedBox(
+                    width: 100, // <-- Your width
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.redAccent),
+                      ),
+                      onPressed: () async {
+                        _saveResult(
+                            userName: user.displayName!, score: _counter);
+                        Fluttertoast.showToast(
+                            msg: FeedTheCatConstants.savedMessage,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.white,
+                            textColor: Colors.black,
+                            fontSize: 16.0);
+                      },
+                      child: const Text(
+                        FeedTheCatConstants.saveButtonTitle,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    padding: const EdgeInsets.all(3.0),
                   ),
-                ],
-              ),
-              flex: 3,
+                  padding: const EdgeInsets.all(3.0),
+                ),
+              ],
             ),
-            Expanded(
-              child: Padding(
-                child: _guitarHero(),
-                padding: const EdgeInsets.all(3.0),
-              ),
-              flex: 2,
+            flex: 3,
+          ),
+          Expanded(
+            child: Padding(
+              child: _guitarHero(),
+              padding: const EdgeInsets.all(3.0),
             ),
-          ],
-        ),
+            flex: 2,
+          ),
+        ],
       ),
     );
   }
@@ -196,7 +197,7 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
         children: [
           Center(
             child: _guitarHeroButton(
-              color: _colors[_currentColorIndex],
+              color: FeedTheCatConstants.colors[_currentColorIndex],
               isColorPicker: true,
               currentColorIndex: 0,
             ),
@@ -205,22 +206,22 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
             child: Row(
               children: [
                 _guitarHeroButton(
-                  color: _colors[0],
+                  color: FeedTheCatConstants.colors[0],
                   isColorPicker: false,
                   currentColorIndex: 0,
                 ),
                 _guitarHeroButton(
-                  color: _colors[1],
+                  color: FeedTheCatConstants.colors[1],
                   isColorPicker: false,
                   currentColorIndex: 1,
                 ),
                 _guitarHeroButton(
-                  color: _colors[2],
+                  color: FeedTheCatConstants.colors[2],
                   isColorPicker: false,
                   currentColorIndex: 2,
                 ),
                 _guitarHeroButton(
-                  color: _colors[3],
+                  color: FeedTheCatConstants.colors[3],
                   isColorPicker: false,
                   currentColorIndex: 3,
                 ),
@@ -236,16 +237,20 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
     );
   }
 
-  Padding _guitarHeroButton(
-      {required color, required isColorPicker, required currentColorIndex}) {
+  Padding _guitarHeroButton({
+    required color,
+    required isColorPicker,
+    required currentColorIndex,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(
         right: 15,
         left: 15,
       ),
       child: ElevatedButton(
-        onPressed: () =>
-            isColorPicker ? {} : _checkSelectedColor(currentColorIndex),
+        onPressed: () => isColorPicker
+            ? {}
+            : _checkSelectedColor(tappedButtonIndex: currentColorIndex),
         child: const SizedBox(),
         style: ElevatedButton.styleFrom(
           primary: color,
@@ -254,7 +259,7 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
     );
   }
 
-  void _checkSelectedColor(int tappedButtonIndex) {
+  void _checkSelectedColor({@required tappedButtonIndex}) {
     if (_currentColorIndex == tappedButtonIndex) {
       setState(() {
         _currentColorIndex = Random().nextInt(4);
@@ -271,13 +276,14 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
           _controller.reset();
         }
         _controller.forward();
-        // print(FutureBuilder(builder: builder)_dbHelper.getUserInfoList().asStream().length);
       }
       if (_counter == 50) {
         _saveProgress(
-            userName: user.displayName!, nameOfProgress: 'First Progress');
+          userName: user.displayName!,
+          nameOfProgress: FeedTheCatConstants.firstProgressName,
+        );
         Fluttertoast.showToast(
-            msg: "Progress 50 has been received!",
+            msg: FeedTheCatConstants.firstProgressMessage,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -286,9 +292,11 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
             fontSize: 16.0);
       } else if (_counter == 100) {
         _saveProgress(
-            userName: user.displayName!, nameOfProgress: 'Second Progress');
+          userName: user.displayName!,
+          nameOfProgress: FeedTheCatConstants.secondProgressName,
+        );
         Fluttertoast.showToast(
-            msg: "Progress 100 has been received!",
+            msg: FeedTheCatConstants.secondProgressMessage,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -299,7 +307,10 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
     });
   }
 
-  Future<void> _saveResult({required userName, required score}) async {
+  Future<void> _saveResult({
+    required userName,
+    required score,
+  }) async {
     await _dbHelper.insertOrUpdateRecordByUserName(Record(
       userName: userName,
       dateTime: DateTime.now().toString(),
@@ -307,8 +318,10 @@ class _FeedTheCatScreenState extends State<FeedTheCatScreen>
     ));
   }
 
-  Future<void> _saveProgress(
-      {required userName, required nameOfProgress}) async {
+  Future<void> _saveProgress({
+    required userName,
+    required nameOfProgress,
+  }) async {
     await _dbHelper.insertProgress(Progress(
       userName: userName,
       name: nameOfProgress,

@@ -1,15 +1,15 @@
+import 'package:feed_the_cat_app/view/about_author_screen/about_author_constants.dart';
 import 'package:flutter/material.dart';
 
 class AboutAuthorScreen extends StatelessWidget {
   const AboutAuthorScreen({Key? key}) : super(key: key);
-  final String title = 'About Developer';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(title),
+        title: const Text(AboutAuthorConstants.title),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -21,7 +21,8 @@ class AboutAuthorScreen extends StatelessWidget {
                   child: Padding(
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage('assets/images/author.jpg'),
+                      backgroundImage:
+                          AssetImage(AboutAuthorConstants.profileImagePath),
                     ),
                     padding: EdgeInsets.all(15.0),
                   ),
@@ -32,7 +33,7 @@ class AboutAuthorScreen extends StatelessWidget {
                     children: const [
                       Padding(
                         child: Text(
-                          'Alex Shevelyanchik',
+                          AboutAuthorConstants.author,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 25.0,
@@ -44,7 +45,7 @@ class AboutAuthorScreen extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.all(5.0),
                         child: Text(
-                          'shevelyanchik01@mail.ru',
+                          AboutAuthorConstants.authorEmail,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -67,7 +68,7 @@ class AboutAuthorScreen extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.all(25.0),
                     child: Text(
-                      'About App and Developer:',
+                      AboutAuthorConstants.aboutAppTitle,
                       style: TextStyle(
                         fontSize: 28.0,
                         fontWeight: FontWeight.bold,
@@ -80,7 +81,7 @@ class AboutAuthorScreen extends StatelessWidget {
                       text: const TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Lab №1: Game feed the Cat.\nThe developer is a student of BSUIR (Faculty of Computer Systems and Networks, Department of Information Technology Software, Group: 951008).',
+                            text: AboutAuthorConstants.appDescription,
                             style: TextStyle(
                               fontSize: 25.0,
                               fontWeight: FontWeight.normal,

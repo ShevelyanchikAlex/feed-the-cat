@@ -1,4 +1,5 @@
 import 'package:feed_the_cat_app/services/impl/google_signin.dart';
+import 'package:feed_the_cat_app/view/signup_screen/sign_up_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,7 @@ class SignUpScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Sign Up'),
+          child: Text(SignUpConstants.title),
         ),
       ),
       body: Center(
@@ -21,7 +22,7 @@ class SignUpScreen extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.all(40.0),
               child: Text(
-                'Welcome to Feed the Cat',
+                SignUpConstants.welcomeTitle,
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold,
@@ -31,7 +32,7 @@ class SignUpScreen extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.all(30.0),
               child: Image(
-                image: AssetImage('assets/images/signup.png'),
+                image: AssetImage(SignUpConstants.signUpImage),
               ),
             ),
             Padding(
@@ -42,7 +43,7 @@ class SignUpScreen extends StatelessWidget {
                   color: Colors.redAccent,
                 ),
                 label: const Text(
-                  'Sign Up with Google',
+                  SignUpConstants.signUpBtnText,
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,

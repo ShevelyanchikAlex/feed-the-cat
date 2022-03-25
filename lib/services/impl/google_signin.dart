@@ -1,6 +1,6 @@
 import 'package:feed_the_cat_app/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSignInService extends ChangeNotifier implements AuthService {
@@ -25,9 +25,10 @@ class GoogleSignInService extends ChangeNotifier implements AuthService {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
-
     notifyListeners();
   }
 

@@ -1,3 +1,4 @@
+import 'package:feed_the_cat_app/view/progress_screen/progress_constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/db_helper.dart';
@@ -10,26 +11,34 @@ class ProgressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Progresses'),
+        title: const Text(
+          ProgressConstants.title,
+        ),
       ),
       body: FutureBuilder<DataTable>(
           future: _createTable(),
           builder: (BuildContext context, AsyncSnapshot<DataTable> snapshot) {
             if (!snapshot.hasData) {
               return const Center(
-                  child: Text("Loading...",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                      )));
+                child: Text(
+                  ProgressConstants.loading,
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+              );
             }
             return snapshot.data!.rows.isEmpty
                 ? const Center(
-                    child: Text("No Progresses",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                        )))
+                    child: Text(
+                      ProgressConstants.emptyProgressList,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
                 : ListView(
                     children: [snapshot.requireData],
                   );
@@ -48,7 +57,7 @@ class ProgressScreen extends StatelessWidget {
     return [
       const DataColumn(
         label: Text(
-          'UserName',
+          ProgressConstants.userName,
           style: TextStyle(
             fontSize: 15.0,
           ),
@@ -56,7 +65,7 @@ class ProgressScreen extends StatelessWidget {
       ),
       const DataColumn(
         label: Text(
-          'Name of Progress',
+          ProgressConstants.nameOfProgress,
           style: TextStyle(
             fontSize: 15.0,
           ),

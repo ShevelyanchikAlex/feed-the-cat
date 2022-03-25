@@ -44,8 +44,7 @@ class DBHelper {
 
   Future<int> isUserExistsInRecords(String userName) async {
     final db = await database;
-    List<Map> records =
-        await db.rawQuery('SELECT * FROM ${DBConstants.recordTable}');
+    List<Map> records = await db.query(DBConstants.recordTable);
     for (var element in records) {
       if (element[DBConstants.recordUserNameColumn] == userName) {
         return element[DBConstants.recordIdColumn];

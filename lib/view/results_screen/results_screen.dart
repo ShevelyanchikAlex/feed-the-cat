@@ -1,4 +1,4 @@
-
+import 'package:feed_the_cat_app/view/results_screen/results_constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/db_helper.dart';
@@ -6,20 +6,19 @@ import '../../models/record.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({Key? key}) : super(key: key);
-  final String title = 'Results';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: const Text(ResultsConstant.title),
       ),
       body: FutureBuilder<DataTable>(
           future: _createTable(),
           builder: (BuildContext context, AsyncSnapshot<DataTable> snapshot) {
             if (!snapshot.hasData) {
               return const Center(
-                  child: Text("Loading...",
+                  child: Text(ResultsConstant.loading,
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
@@ -27,7 +26,7 @@ class ResultScreen extends StatelessWidget {
             }
             return snapshot.data!.rows.isEmpty
                 ? const Center(
-                    child: Text("No Records",
+                    child: Text(ResultsConstant.emptyRecordList,
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black,
@@ -50,7 +49,7 @@ class ResultScreen extends StatelessWidget {
     return [
       const DataColumn(
         label: Text(
-          'UserName',
+          ResultsConstant.userNameColumn,
           style: TextStyle(
             fontSize: 15.0,
           ),
@@ -58,7 +57,7 @@ class ResultScreen extends StatelessWidget {
       ),
       const DataColumn(
         label: Text(
-          'Score',
+          ResultsConstant.scoreColumn,
           style: TextStyle(
             fontSize: 15.0,
           ),
@@ -66,7 +65,7 @@ class ResultScreen extends StatelessWidget {
       ),
       const DataColumn(
         label: Text(
-          'Date',
+          ResultsConstant.dateColumn,
           style: TextStyle(
             fontSize: 15.0,
           ),
